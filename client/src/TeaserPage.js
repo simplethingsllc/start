@@ -1,11 +1,16 @@
 import cx from 'classnames';
 import React, { Component } from 'react';
-
-import logo from './icon-logo@2x.png';
 import './TeaserPage.css';
 
-const Button = ({ title, className, ...props }) => (
-  <button className={cx('Button', className)}>{title}</button>
+const THEME_NAMES = [ 'blue', 'red', 'black' ];
+const DEFAULT_THEME_INDEX = 0;
+
+const withTheme = (className, theme, animating) => {
+  return cx(`${className} ${className}-theme--${theme}`, animating && `${className}-anim--transition`);
+}
+
+const Button = ({ title, theme, className, ...props }) => (
+  <button className={cx(withTheme('Button', theme), className)}>{title}</button>
 );
 
 const TextInput = ({ type = 'text', className, ...props }) => (
@@ -18,27 +23,40 @@ const Layer = ({ children }) => (
   </div>
 );
 
-const Background = () => (
-  <div className="Background" />
+const Logo = ({ theme }) => (
+  <div className={withTheme('Logo', theme)} />
+)
+
+const Background = ({ theme }) => (
+  <div className={withTheme('Background', theme)} />
 );
 
-const styles = {
-  logo: {
-    width: 36,
-    height: 36,
-  },
-};
-
 class TeaserPage extends Component {
+  state = {
+    selectedTheme: DEFAULT_THEME_INDEX,
+  };
+
+  _handleCustomize = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      animating: true,
+      selectedTheme: (this.state.selectedTheme + 1) % THEME_NAMES.length
+    });
+  };
+
   render() {
+    const theme = THEME_NAMES[this.state.selectedTheme];
     return (
       <div className="TeaserPage">
-        <Background />
+        <Background theme={theme} />
         <div className="TeaserPage-content">
           <div className="TeaserPage-left">
             <Layer>
               <div className="TeaserPage-form">
-                <img alt="Start" src={logo} style={styles.logo} className="TeaserPage-logo" />
+                <div className="TeaserPage-logo">
+                  <Logo theme={theme} />
+                </div>
                 <TextInput
                   className="TeaserPage-input"
                   placeholder="Company"
@@ -50,6 +68,7 @@ class TeaserPage extends Component {
                 <Button
                   className="TeaserPage-button"
                   title="Join Waitlist"
+                  theme={theme}
                 />
               </div>
             </Layer>
@@ -61,7 +80,10 @@ class TeaserPage extends Component {
             <p className="TeaserPage-subtitle">
               The monkey-rope is found in all whalers; but it was only in the Pequoud that the monkey and his holder were ever tied together.
             </p>
-            <a href="#" className="TeaserPage-link">
+            <a
+              href="#"
+              onClick={this._handleCustomize}
+              className="TeaserPage-link">
               Try customizing the flow
             </a>
           </div>

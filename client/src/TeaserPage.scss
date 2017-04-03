@@ -1,3 +1,31 @@
+$themes: (
+  blue: (
+    backgroundColor: #2d20e2,
+  ),
+  black: (
+    backgroundColor: #000,
+  ),
+  red: (
+    backgroundColor: rgb(217, 14, 62),
+  ),
+);
+
+@mixin theme-transitions {
+  transition-delay: 0s;
+  transition-duration: 500ms;
+  transition-property: background;
+  transition-timing-function: ease-in-out;
+}
+
+@mixin theme-colors {
+  @each $name, $theme in $themes {
+    &-theme--#{$name} {
+      background-color: map-get($theme, 'backgroundColor');
+    }
+  }
+  @include theme-transitions;
+}
+
 .Button {
   border: 0;
   outline: 0;
@@ -7,7 +35,8 @@
   text-transform: uppercase;
   color: #FFF;
   height: 48px;
-  background-color: #2d20e2;
+
+  @include theme-colors;
 }
 
 .TextInput {
@@ -16,6 +45,19 @@
   border-bottom: 1px solid #eee;
   line-height: 32px;
   outline: 0;
+}
+
+.Logo {
+  display: inline-block;
+  background-size: cover;
+  width: 36px;
+  height: 36px;
+
+  @each $name, $theme in $themes {
+    &-theme--#{$name} {
+      background-image: url('./logo-#{$name}@2x.png');
+    }
+  }
 }
 
 .Layer {
@@ -30,9 +72,10 @@
   right: -200px;
   bottom: -200px;
   left: 41%;
-  background-color: #2d20e2;
   z-index: -1;
   transform: rotate(9deg);
+
+  @include theme-colors;
 }
 
 .TeaserPage {
