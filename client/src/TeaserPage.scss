@@ -71,7 +71,6 @@ $themes: (
   right: -200px;
   bottom: -200px;
   left: 41%;
-  z-index: -1;
   transform: rotate(9deg);
 
   @include theme-colors;
@@ -164,7 +163,7 @@ $themes: (
 
 .TitleSection {
   max-width: 320px;
-  
+
   h1 {
     color: #FFF;
     font-weight: 500;
@@ -196,6 +195,7 @@ $themes: (
     display: flex;
     flex-direction: row;
     justify-content: center;
+    z-index: 1;
   }
 
   &-left {
