@@ -104,10 +104,10 @@ const CustomizeSection = ({ options, theme, onChangeTheme, onChangeOption }) => 
 const TitleSection = ({ onCustomize }) => (
   <div className="TitleSection">
     <h1>
-      Signup flows made easy—no code required.
+      Signup flows made easy–no coding required.
     </h1>
     <p>
-      The monkey-rope is found in all whalers; but it was only in the Pequoud that the monkey and his holder were ever tied together.
+      Add-on signup flows taht you can create and customize in minutes.
     </p>
     <a
       href="#"
@@ -123,7 +123,7 @@ const TitleSection = ({ onCustomize }) => (
 
 class TeaserPage extends Component {
   state = {
-    customizing: true,
+    customizing: false,
     options: {
       logo: true,
       company: true,
