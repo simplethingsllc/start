@@ -23,6 +23,13 @@ const Layer = ({ children }) => (
   </div>
 );
 
+const Checkbox = ({ selected, onChange }) => (
+  <div
+    className={cx('Checkbox', selected && 'Checkbox--selected')}
+    onClick={() => onChange(!selected)}
+  />
+);
+
 const Logo = ({ theme }) => (
   <div className={withTheme('Logo', theme)} />
 )
@@ -37,39 +44,31 @@ const Subheading = ({ title, className }) => (
   </div>
 );
 
-
 const ColorPicker = ({ theme, onSelect }) => (
   <div className="ColorPicker">
-    <div
-      className={withTheme('ColorPicker-button', theme)}
-      onClick={(e) => {
-        e.preventDefault();
-        const index = THEME_NAMES.findIndex((name) => name === theme);
-        onSelect((index + 1) % THEME_NAMES.length);
-      }}
-    />
-    <div className={cx('ColorPicker-popup')}>
-      {
-        THEME_NAMES.map((theme) => (
-          <div
-            key={theme}
-            className={withTheme('ColorPicker-square', theme)}
-            onClick={() => onSelect(theme)}
-          />
-        ))
-      }
-    </div>
+    {
+      THEME_NAMES.map((theme, i) => (
+        <div
+          key={theme}
+          className={withTheme('ColorPicker-button', theme)}
+          onClick={() => onSelect(i)}
+        />
+      ))
+    }
   </div>
 );
 
-const CustomizeSection = ({ theme, onChangeTheme }) => (
+const CustomizeSection = ({ options, theme, onChangeTheme, onChangeOption }) => (
   <section className="CustomizeSection">
-    <h2>
-      Customize
-    </h2>
+    <h2>Customize</h2>
     <Subheading title="Brand" />
     <div className="OptionGroup">
-      <div className="Option">Logo</div>
+      <div className="Option">
+        <Checkbox
+          selected={options.logo}
+          onChange={(selected) => onChangeOption('logo', selected)}
+        />Logo
+      </div>
       <div className="Option">Color:
         <ColorPicker
           theme={theme}
@@ -80,9 +79,24 @@ const CustomizeSection = ({ theme, onChangeTheme }) => (
     <div style={{ marginTop: 32 }} />
     <Subheading title="Information" />
     <div className="OptionGroup">
-      <div className="Option">Company</div>
-      <div className="Option">Name</div>
-      <div className="Option">ReCAPTCHA</div>
+      <div className="Option">
+        <Checkbox
+          selected={options.company}
+          onChange={(selected) => onChangeOption('company', selected)}
+        />Company
+      </div>
+      <div className="Option">
+        <Checkbox
+          selected={options.name}
+          onChange={(selected) => onChangeOption('name', selected)}
+        />Name
+      </div>
+      <div className="Option">
+        <Checkbox
+          selected={options.captcha}
+          onChange={(selected) => onChangeOption('captcha', selected)}
+        />CAPTCHA
+      </div>
     </div>
   </section>
 );
@@ -109,13 +123,28 @@ const TitleSection = ({ onCustomize }) => (
 
 class TeaserPage extends Component {
   state = {
-    selectedTheme: DEFAULT_THEME_INDEX,
     customizing: true,
+    options: {
+      logo: true,
+      company: true,
+      name: false,
+      captcha: false,
+    },
+    selectedTheme: DEFAULT_THEME_INDEX,
   };
 
   _handleChangeColor = (theme) => {
     this.setState({
       selectedTheme: (this.state.selectedTheme + 1) % THEME_NAMES.length
+    });
+  };
+
+  _handleChangeOption = (option, selected) => {
+    this.setState({
+      options: {
+        ...this.state.options,
+        [option]: selected,
+      }
     });
   };
 
@@ -152,8 +181,10 @@ class TeaserPage extends Component {
             {
               customizing
                 ? <CustomizeSection
-                    theme={theme}
+                    options={this.state.options}
+                    onChangeOption={(option, selected) => this._handleChangeOption(option, selected)}
                     onChangeTheme={(selectedTheme) => this.setState({ selectedTheme })}
+                    theme={theme}
                   />
                 : <TitleSection onCustomize={() => this.setState({ customizing: true })} />
             }

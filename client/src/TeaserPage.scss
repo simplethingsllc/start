@@ -48,7 +48,6 @@ $themes: (
 }
 
 .Logo {
-  display: inline-block;
   background-size: cover;
   width: 36px;
   height: 36px;
@@ -89,52 +88,44 @@ $themes: (
   line-height: 14px;
 }
 
+.Checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 100px;
+  background-color: #FFF;
+  margin-right: 12px;
+  cursor: pointer;
+
+  &--selected {
+    background-image: url('./icon-check@2x.png');
+    background-size: cover;
+    background-color: #000;
+  }
+}
+
 .ColorPicker {
   cursor: pointer;
   margin-left: 12px;
-  position: relative;
+  display: flex;
+  flex-direction: row;
+  border-radius: 3px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.34);
+  border: solid 2px #ffffff;
 
   &-button {
     width: 24px;
     height: 16px;
     outline: 0;
-    border-radius: 3px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.34);
-    border: solid 2px #ffffff;
 
-    @include theme-colors;
-  }
-
-  &-popup {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    border-radius: 3px;
-    border: 8px solid white;
-    background-color: #ffffff;
-    left: -(3 * 48 - 8) / 2 + px;
-    top: -(48 + 16) - 16 + px;
-
-    opacity: 0;
-    transition: opacity 500ms ease-in-out;
-
-    &--visible {
-      opacity: 1;
-      transition: opacity 500ms ease-in-out;
-    }
-  }
-
-  &-square {
-    width: 48px;
-    height: 48px;
     @include theme-colors;
   }
 }
 
 .OptionGroup {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  flex-direction: row;  
+  flex-direction: row;
 }
 
 .Option {
