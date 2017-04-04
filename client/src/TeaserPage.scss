@@ -78,18 +78,92 @@ $themes: (
   @include theme-colors;
 }
 
-.TeaserPage {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+.Subheading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.21);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  padding: 12px 0;
+  color: #fff;
+  line-height: 14px;
+}
 
-  h1 {
-    font-weight: normal;
+.ColorPicker {
+  cursor: pointer;
+  margin-left: 12px;
+  position: relative;
+
+  &-button {
+    width: 24px;
+    height: 16px;
+    outline: 0;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.34);
+    border: solid 2px #ffffff;
+
+    @include theme-colors;
+  }
+
+  &-popup {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    border-radius: 3px;
+    border: 8px solid white;
+    background-color: #ffffff;
+    left: -(3 * 48 - 8) / 2 + px;
+    top: -(48 + 16) - 16 + px;
+
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+
+    &--visible {
+      opacity: 1;
+      transition: opacity 500ms ease-in-out;
+    }
+  }
+
+  &-square {
+    width: 48px;
+    height: 48px;
+    @include theme-colors;
+  }
+}
+
+.OptionGroup {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;  
+}
+
+.Option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  min-width: 160px;
+  margin-top: 16px;
+}
+
+.CustomizeSection {
+  max-width: 320px;
+
+  h2 {
     color: #FFF;
-    size: 42px;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 48px;
+  }
+}
+
+.TitleSection {
+  h1 {
+    color: #FFF;
+    font-weight: 500;
+    font-size: 42px;
     line-height: 48px;
     letter-spacing: -0.4px;
   }
@@ -103,6 +177,15 @@ $themes: (
   a {
     color: #d8d8d8;
   }
+}
+
+.TeaserPage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 
   &-content {
     display: flex;
@@ -116,8 +199,6 @@ $themes: (
 
   &-right {
     margin: 40px;
-    align-self: center;
-    max-width: 380px;
   }
 
   &-form {

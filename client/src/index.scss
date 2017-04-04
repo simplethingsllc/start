@@ -1,8 +1,15 @@
 html, body {
   margin: 0;
   padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  box-sizing: border-box;
   font-family: sans-serif;
   height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 h1, h2, h3, input {

@@ -31,22 +31,97 @@ const Background = ({ theme }) => (
   <div className={withTheme('Background', theme)} />
 );
 
+const Subheading = ({ title, className }) => (
+  <div className={cx('Subheading', className)}>
+    {title}
+  </div>
+);
+
+
+const ColorPicker = ({ theme, onSelect }) => (
+  <div className="ColorPicker">
+    <div
+      className={withTheme('ColorPicker-button', theme)}
+      onClick={(e) => {
+        e.preventDefault();
+        const index = THEME_NAMES.findIndex((name) => name === theme);
+        onSelect((index + 1) % THEME_NAMES.length);
+      }}
+    />
+    <div className={cx('ColorPicker-popup')}>
+      {
+        THEME_NAMES.map((theme) => (
+          <div
+            key={theme}
+            className={withTheme('ColorPicker-square', theme)}
+            onClick={() => onSelect(theme)}
+          />
+        ))
+      }
+    </div>
+  </div>
+);
+
+const CustomizeSection = ({ theme, onChangeTheme }) => (
+  <section className="CustomizeSection">
+    <h2>
+      Customize
+    </h2>
+    <Subheading title="Brand" />
+    <div className="OptionGroup">
+      <div className="Option">Logo</div>
+      <div className="Option">Color:
+        <ColorPicker
+          theme={theme}
+          onSelect={onChangeTheme}
+        />
+      </div>
+    </div>
+    <div style={{ marginTop: 32 }} />
+    <Subheading title="Information" />
+    <div className="OptionGroup">
+      <div className="Option">Company</div>
+      <div className="Option">Name</div>
+      <div className="Option">ReCAPTCHA</div>
+    </div>
+  </section>
+);
+
+const TitleSection = ({ onCustomize }) => (
+  <div className="TitleSection">
+    <h1>
+      Signup flows made easy—no code required.
+    </h1>
+    <p>
+      The monkey-rope is found in all whalers; but it was only in the Pequoud that the monkey and his holder were ever tied together.
+    </p>
+    <a
+      href="#"
+      onClick={(e) => {
+        e.preventDefault();
+        onCustomize();
+      }}
+      className="TeaserPage-link">
+      Try customizing the flow
+    </a>
+  </div>
+);
+
 class TeaserPage extends Component {
   state = {
     selectedTheme: DEFAULT_THEME_INDEX,
+    customizing: true,
   };
 
-  _handleCustomize = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  _handleChangeColor = (theme) => {
     this.setState({
-      animating: true,
       selectedTheme: (this.state.selectedTheme + 1) % THEME_NAMES.length
     });
   };
 
   render() {
-    const theme = THEME_NAMES[this.state.selectedTheme];
+    const { customizing, selectedTheme } = this.state;
+    const theme = THEME_NAMES[selectedTheme];
     return (
       <div className="TeaserPage">
         <Background theme={theme} />
@@ -74,18 +149,14 @@ class TeaserPage extends Component {
             </Layer>
           </div>
           <div className="TeaserPage-right">
-            <h1 className="TeaserPage-title">
-              Signup flows made easy—no code required.
-            </h1>
-            <p className="TeaserPage-subtitle">
-              The monkey-rope is found in all whalers; but it was only in the Pequoud that the monkey and his holder were ever tied together.
-            </p>
-            <a
-              href="#"
-              onClick={this._handleCustomize}
-              className="TeaserPage-link">
-              Try customizing the flow
-            </a>
+            {
+              customizing
+                ? <CustomizeSection
+                    theme={theme}
+                    onChangeTheme={(selectedTheme) => this.setState({ selectedTheme })}
+                  />
+                : <TitleSection onCustomize={() => this.setState({ customizing: true })} />
+            }
           </div>
         </div>
       </div>
