@@ -47,12 +47,12 @@ const Subheading = ({ title, className }) => (
 const ColorPicker = ({ theme, onSelect }) => (
   <div className="ColorPicker">
     {
-      THEME_NAMES.map((theme, i) => (
+      THEME_NAMES.map((t, i) => (
         <div
-          key={theme}
-          className={withTheme('ColorPicker-button', theme)}
-          onClick={() => onSelect(i)}
-        />
+          key={t}
+          className={cx(withTheme('ColorPicker-button', t), t === theme && 'ColorPicker-button--selected')}
+          onClick={() => onSelect(i)}>
+        </div>
       ))
     }
   </div>
@@ -127,7 +127,7 @@ class TeaserPage extends Component {
     options: {
       logo: true,
       company: true,
-      name: false,
+      name: true,
       captcha: false,
     },
     selectedTheme: DEFAULT_THEME_INDEX,
@@ -149,7 +149,7 @@ class TeaserPage extends Component {
   };
 
   render() {
-    const { customizing, selectedTheme } = this.state;
+    const { customizing, options, selectedTheme } = this.state;
     const theme = THEME_NAMES[selectedTheme];
     return (
       <div className="TeaserPage">
@@ -158,13 +158,20 @@ class TeaserPage extends Component {
           <div className="TeaserPage-left">
             <Layer>
               <div className="TeaserPage-form">
-                <div className="TeaserPage-logo">
-                  <Logo theme={theme} />
-                </div>
-                <TextInput
-                  className="TeaserPage-input"
-                  placeholder="Company"
-                />
+                { options.logo ? (
+                  <div className="TeaserPage-logo">
+                    <Logo theme={theme} />
+                  </div>) : null }
+                { options.name ? (
+                  <TextInput
+                    className="TeaserPage-input"
+                    placeholder="Name"
+                  />) : null }
+                { options.company ? (
+                  <TextInput
+                    className="TeaserPage-input"
+                    placeholder="Company"
+                  />) : null }
                 <TextInput
                   className="TeaserPage-input"
                   placeholder="Email"

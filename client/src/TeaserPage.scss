@@ -116,8 +116,20 @@ $themes: (
     width: 24px;
     height: 16px;
     outline: 0;
+    position: relative;
 
     @include theme-colors;
+
+    &--selected::before {
+      content: " ";
+      border: 1px solid white;
+      margin: 2px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 }
 
