@@ -1,3 +1,8 @@
+
+$viewportRetina: "only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)";
+$viewportMedium: "only screen and (max-width: 800px)";
+$viewportSmall: "only screen and (max-width: 480px)";
+
 $themes: (
   blue: (
     backgroundColor: #2d20e2,
@@ -27,6 +32,7 @@ $themes: (
 }
 
 .Button {
+  cursor: pointer;
   border: 0;
   outline: 0;
   padding: 0;
@@ -35,7 +41,6 @@ $themes: (
   text-transform: uppercase;
   color: #FFF;
   height: 48px;
-
   @include theme-colors;
 }
 
@@ -48,9 +53,10 @@ $themes: (
 }
 
 .Logo {
-  background-size: cover;
   width: 36px;
   height: 36px;
+  background-size: cover;
+  background-image: url('./logo-white-transparent@2x.png');
 
   @each $name, $theme in $themes {
     &-theme--#{$name} {
@@ -72,8 +78,14 @@ $themes: (
   bottom: -200px;
   left: 41%;
   transform: rotate(9deg);
-
   @include theme-colors;
+
+  @media #{$viewportMedium} {
+    top: -200px;
+    right: -200px;
+    left: -200px;
+    bottom: 41%;
+  }
 }
 
 .Subheading {
@@ -163,6 +175,11 @@ $themes: (
 
 .TitleSection {
   max-width: 320px;
+  align-items: center;
+
+  @media #{$viewportMedium} {
+    text-align: center;
+  }
 
   h1 {
     color: #FFF;
@@ -170,6 +187,12 @@ $themes: (
     font-size: 42px;
     line-height: 48px;
     letter-spacing: -0.4px;
+
+    @media #{$viewportSmall} {
+      font-size: 21px;
+      line-height: 32px;
+      letter-spacing: -0.2px;
+    }
   }
 
   p {
@@ -181,49 +204,84 @@ $themes: (
   a {
     color: #d8d8d8;
   }
+
+  &-logo {
+    display: none;
+    margin: 0 auto;
+    @media #{$viewportMedium} {
+      display: block;
+    }
+  }
+
+  &-link {
+    @media #{$viewportMedium} {
+      display: none;
+    }
+  }
 }
 
 .TeaserPage {
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: center;
   width: 100%;
   height: 100%;
+  justify-content: center;
+
+  @media #{$viewportMedium} {
+    justify-content: flex-start;
+    margin-top: 50px;
+  }
 
   &-content {
     display: flex;
     flex-direction: row;
     justify-content: center;
     z-index: 1;
+
+    @media #{$viewportMedium} {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
   }
 
-  &-left {
+  &-left, &-right {
     margin: 40px;
-  }
 
-  &-right {
-    margin: 40px;
+    @media #{$viewportMedium} {
+      margin: 20px;
+    }
   }
 
   &-form {
-    padding: 16px;
+    padding: 32px;
     min-width: 408px;
     display: inline-flex;
     flex-direction: column;
+
+    @media #{$viewportSmall} {
+      min-width: 320px;
+      padding: 32px;
+    }
   }
 
   &-logo {
     align-self: center;
-    margin: 36px 36px 18px 36px;
+    margin: 36px 0 18px 0;
+
+    @media #{$viewportMedium} {
+      display: none;
+    }
   }
 
   &-input {
-    margin: 32px 32px 0 32px;
+    margin-top: 32px;
   }
 
   &-captcha {
-    margin: 32px 32px -40px 32px;
+    margin: 0 auto;
+    margin-top: 32px;
+    margin-bottom: -40px;
   }
 
   &-button {

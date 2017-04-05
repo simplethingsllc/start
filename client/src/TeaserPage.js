@@ -1,11 +1,27 @@
 import cx from 'classnames';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import './TeaserPage.css';
 
 const THEME_NAMES = [ 'blue', 'red', 'black' ];
 const DEFAULT_THEME_INDEX = 0;
 
-const withTheme = (className, theme, animating) => {
+const createEmitter = () => {
+  const listeners = {};
+  return {
+    emit(...args) {
+      Object.keys(listeners).map((k) => listeners[k](...args));
+    },
+    addListener(fn) {
+      listeners[fn] = fn;
+    },
+    removeListener(fn) {
+      delete listeners[fn];
+    },
+  }
+};
+
+const withTheme = (className, theme = 'default', animating) => {
   return cx(`${className} ${className}-theme--${theme}`, animating && `${className}-anim--transition`);
 }
 
@@ -30,8 +46,8 @@ const Checkbox = ({ selected, onChange }) => (
   />
 );
 
-const Logo = ({ theme }) => (
-  <div className={withTheme('Logo', theme)} />
+const Logo = ({ className, theme }) => (
+  <div className={cx(withTheme('Logo', theme), className)} />
 )
 
 const Background = ({ theme }) => (
@@ -43,6 +59,61 @@ const Subheading = ({ title, className }) => (
     {title}
   </div>
 );
+
+const recaptchaEmitter = createEmitter();
+
+let recaptchaApi = window.grecaptcha || undefined;
+if (!recaptchaApi) {
+  window.onRecaptchaLoaded = () => {
+    recaptchaApi = window.grecaptcha;
+    recaptchaEmitter.emit(recaptchaApi);
+  }
+}
+
+class Recaptcha extends Component {
+
+  _widgetId;
+
+  static propTypes = {
+    className: PropTypes.any,
+    onVerify: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onVerify: () => {},
+  };
+
+  componentDidUpdate() {
+    this._renderWidget();
+  }
+
+  _renderWidget = () => {
+    if (this._widgetId !== undefined) {
+      return;
+    }
+    if (!recaptchaApi) {
+      recaptchaEmitter.addListener(this._renderWidget);
+      return;
+    }
+    recaptchaEmitter.removeListener(this._renderWidget);
+    const el = ReactDOM.findDOMNode(this.refs.container);
+    this._widgetId = recaptchaApi.render(el, {
+      sitekey: '6Ld6nBsUAAAAAEMPc6idzDXftVzjTgVmhaau-2_6',
+      callback: this._onVerify,
+      theme: 'light',
+    });
+  }
+
+  _onVerify = (verification) => {
+    this.props.onVerify(verification);
+  };
+
+  render() {
+    setTimeout(this._renderWidget);
+    const { className } = this.props;
+    return <div ref="container" className={cx(className, 'g-recaptcha')} ></div>
+  }
+}
 
 const ColorPicker = ({ theme, onSelect }) => (
   <div className="ColorPicker">
@@ -103,11 +174,12 @@ const CustomizeSection = ({ options, theme, onChangeTheme, onChangeOption }) => 
 
 const TitleSection = ({ onCustomize }) => (
   <div className="TitleSection">
+    <Logo className="TitleSection-logo" />
     <h1>
       Signup flows made easy–no coding required.
     </h1>
     <p>
-      Add-on signup flows taht you can create and customize in minutes.
+      Add-on signup flows that you can create and customize in minutes.
     </p>
     <a
       href="#"
@@ -115,14 +187,10 @@ const TitleSection = ({ onCustomize }) => (
         e.preventDefault();
         onCustomize();
       }}
-      className="TeaserPage-link">
+      className="TitleSection-link">
       Try customizing the flow
     </a>
   </div>
-);
-
-const ReCaptcha = ({ className }) => (
-  <div className={cx(className, 'g-recaptcha')} data-sitekey="6Ld6nBsUAAAAAEMPc6idzDXftVzjTgVmhaau-2_6"></div>
 );
 
 class TeaserPage extends Component {
@@ -132,9 +200,10 @@ class TeaserPage extends Component {
       logo: true,
       company: true,
       name: true,
-      captcha: true,
+      captcha: false,
     },
     selectedTheme: DEFAULT_THEME_INDEX,
+    verification: undefined,
   };
 
   _handleChangeColor = (theme) => {
@@ -151,6 +220,10 @@ class TeaserPage extends Component {
       }
     });
   };
+
+  _handleVerify = (verification) => {
+    this.setState({ verification });
+  }
 
   render() {
     const { customizing, options, selectedTheme } = this.state;
@@ -180,7 +253,11 @@ class TeaserPage extends Component {
                     className="TeaserPage-input"
                     placeholder="Company (optional)"
                   />) : null }
-                { options.captcha ? <ReCaptcha className="TeaserPage-captcha" /> : null }
+                { options.captcha ? (
+                  <Recaptcha
+                    onVerify={this._handleVerify}
+                    className="TeaserPage-captcha"
+                  />) : null }
                 <Button
                   className="TeaserPage-button"
                   title="Join Waitlist"
