@@ -121,6 +121,10 @@ const TitleSection = ({ onCustomize }) => (
   </div>
 );
 
+const ReCaptcha = ({ className }) => (
+  <div className={cx(className, 'g-recaptcha')} data-sitekey="6Ld6nBsUAAAAAEMPc6idzDXftVzjTgVmhaau-2_6"></div>
+);
+
 class TeaserPage extends Component {
   state = {
     customizing: false,
@@ -128,7 +132,7 @@ class TeaserPage extends Component {
       logo: true,
       company: true,
       name: true,
-      captcha: false,
+      captcha: true,
     },
     selectedTheme: DEFAULT_THEME_INDEX,
   };
@@ -167,15 +171,16 @@ class TeaserPage extends Component {
                     className="TeaserPage-input"
                     placeholder="Name"
                   />) : null }
-                { options.company ? (
-                  <TextInput
-                    className="TeaserPage-input"
-                    placeholder="Company"
-                  />) : null }
                 <TextInput
                   className="TeaserPage-input"
                   placeholder="Email"
                 />
+                { options.company ? (
+                  <TextInput
+                    className="TeaserPage-input"
+                    placeholder="Company (optional)"
+                  />) : null }
+                { options.captcha ? <ReCaptcha className="TeaserPage-captcha" /> : null }
                 <Button
                   className="TeaserPage-button"
                   title="Join Waitlist"
