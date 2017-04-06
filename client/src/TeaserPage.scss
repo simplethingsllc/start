@@ -18,7 +18,8 @@ $themes: (
 @mixin theme-transitions {
   transition-delay: 0s;
   transition-duration: 500ms;
-  transition-property: background color;
+  transition-property: background;
+  transition-property: color;
   transition-timing-function: ease-in-out;
 }
 
@@ -290,6 +291,7 @@ $themes: (
     width: 100%;
     align-items: center;
     justify-content: center;
+    padding: 32px;
 
     @include theme-transitions
     @each $name, $theme in $themes {

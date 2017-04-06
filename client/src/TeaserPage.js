@@ -1,6 +1,8 @@
 import cx from 'classnames';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+
+import { rpc } from './net';
 import './TeaserPage.css';
 
 const THEME_NAMES = [ 'blue', 'red', 'black' ];
@@ -225,6 +227,9 @@ class TeaserPage extends Component {
   };
 
   _handleJoinClicked = () => {
+    rpc('/api/join', {
+      email: 'johndoe@example.com',
+    });
     this.setState({ submitted: true });
   };
 
