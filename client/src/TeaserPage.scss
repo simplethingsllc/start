@@ -18,7 +18,7 @@ $themes: (
 @mixin theme-transitions {
   transition-delay: 0s;
   transition-duration: 500ms;
-  transition-property: background;
+  transition-property: background color;
   transition-timing-function: ease-in-out;
 }
 
@@ -61,6 +61,19 @@ $themes: (
   @each $name, $theme in $themes {
     &-theme--#{$name} {
       background-image: url('./logo-#{$name}@2x.png');
+    }
+  }
+}
+
+.Checkmark {
+  width: 52px;
+  height: 52px;
+  background-size: cover;
+  background-image: url('./icon-check@2x.png');
+
+  @each $name, $theme in $themes {
+    &-theme--#{$name} {
+      background-image: url('./icon-check-#{$name}@2x.png');
     }
   }
 }
@@ -253,16 +266,41 @@ $themes: (
     }
   }
 
-  &-form {
-    padding: 32px;
+  &-left {
     min-width: 408px;
-    display: inline-flex;
+    @media #{$viewportSmall} {
+      min-width: 320px;
+    }
+  }
+
+  &-form {
+    width: 100%;
+    padding: 32px;
+    display: flex;
     flex-direction: column;
 
     @media #{$viewportSmall} {
-      min-width: 320px;
       padding: 32px;
     }
+  }
+
+  &-waitlist {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+    @include theme-transitions
+    @each $name, $theme in $themes {
+      &-theme--#{$name} {
+        color: map-get($theme, 'backgroundColor');
+      }
+    }
+  }
+
+  &-checkmark {
+    margin-bottom: 18px;
   }
 
   &-logo {

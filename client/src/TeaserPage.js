@@ -26,18 +26,14 @@ const withTheme = (className, theme = 'default', animating) => {
 }
 
 const Button = ({ title, theme, className, ...props }) => (
-  <button className={cx(withTheme('Button', theme), className)}>{title}</button>
+  <button className={cx(withTheme('Button', theme), className)} {...props}>{title}</button>
 );
 
 const TextInput = ({ type = 'text', className, ...props }) => (
   <input type={type} className={cx('TextInput', className)} {...props} />
 );
 
-const Layer = ({ children }) => (
-  <div className="Layer">
-    {children}
-  </div>
-);
+const Layer = ({ children, className }) => <div className={cx('Layer', className)}>{children}</div>;
 
 const Checkbox = ({ selected, onChange }) => (
   <div
@@ -46,9 +42,11 @@ const Checkbox = ({ selected, onChange }) => (
   />
 );
 
-const Logo = ({ className, theme }) => (
-  <div className={cx(withTheme('Logo', theme), className)} />
-)
+const Image = ({ className }) => <div className={className} />;
+
+const Logo = ({ className, theme }) => <Image className={cx(withTheme('Logo', theme), className)} theme={theme} />;
+
+const Checkmark = ({ className, theme }) => <Image className={cx(withTheme('Checkmark', theme), className)} theme={theme} />;
 
 const Background = ({ theme }) => (
   <div className={withTheme('Background', theme)} />
@@ -204,6 +202,7 @@ class TeaserPage extends Component {
     },
     selectedTheme: DEFAULT_THEME_INDEX,
     verification: undefined,
+    submitted: false,
   };
 
   _handleChangeColor = (theme) => {
@@ -223,49 +222,68 @@ class TeaserPage extends Component {
 
   _handleVerify = (verification) => {
     this.setState({ verification });
+  };
+
+  _handleJoinClicked = () => {
+    this.setState({ submitted: true });
+  };
+
+  _renderFormContent(theme) {
+    const { options } = this.state;
+    return (
+      <div className="TeaserPage-form">
+        { options.logo ? (
+          <div className="TeaserPage-logo">
+            <Logo theme={theme} />
+          </div>) : null }
+        { options.name ? (
+          <TextInput
+            className="TeaserPage-input"
+            placeholder="Name"
+          />) : null }
+        <TextInput
+          className="TeaserPage-input"
+          placeholder="Email"
+        />
+        { options.company ? (
+          <TextInput
+            className="TeaserPage-input"
+            placeholder="Company (optional)"
+          />) : null }
+        { options.captcha ? (
+          <Recaptcha
+            onVerify={this._handleVerify}
+            className="TeaserPage-captcha"
+          />) : null }
+        <Button
+          className="TeaserPage-button"
+          title="Join Waitlist"
+          theme={theme}
+          onClick={this._handleJoinClicked}
+        />
+      </div>
+    );
+  }
+
+  _renderThanks(theme) {
+    return (
+      <div className={withTheme('TeaserPage-waitlist', theme)}>
+        <Checkmark className="TeaserPage-checkmark" theme={theme} />
+        <div>You're on the waitlist!</div>
+      </div>
+    );
   }
 
   render() {
-    const { customizing, options, selectedTheme } = this.state;
+    const { customizing, selectedTheme, submitted } = this.state;
     const theme = THEME_NAMES[selectedTheme];
     return (
       <div className="TeaserPage">
         <Background theme={theme} />
         <div className="TeaserPage-content">
-          <div className="TeaserPage-left">
-            <Layer>
-              <div className="TeaserPage-form">
-                { options.logo ? (
-                  <div className="TeaserPage-logo">
-                    <Logo theme={theme} />
-                  </div>) : null }
-                { options.name ? (
-                  <TextInput
-                    className="TeaserPage-input"
-                    placeholder="Name"
-                  />) : null }
-                <TextInput
-                  className="TeaserPage-input"
-                  placeholder="Email"
-                />
-                { options.company ? (
-                  <TextInput
-                    className="TeaserPage-input"
-                    placeholder="Company (optional)"
-                  />) : null }
-                { options.captcha ? (
-                  <Recaptcha
-                    onVerify={this._handleVerify}
-                    className="TeaserPage-captcha"
-                  />) : null }
-                <Button
-                  className="TeaserPage-button"
-                  title="Join Waitlist"
-                  theme={theme}
-                />
-              </div>
-            </Layer>
-          </div>
+          <Layer className="TeaserPage-left">
+            { submitted ? this._renderThanks(theme) : this._renderFormContent(theme) }
+          </Layer>
           <div className="TeaserPage-right">
             {
               customizing
