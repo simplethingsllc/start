@@ -15,8 +15,7 @@
     "client": "babel-node start-client.js",
     "build-client": "cd client && npm i && npm run build",
     "build": "npm run clean && npm run build-client",
-    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
-    "start": "npm run build-client && NODE_ENV=production node ./server.js",
+    "start": "NODE_ENV=production node ./server.js",
     "lint": "eslint ."
   },
   "devDependencies": {

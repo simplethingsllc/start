@@ -91,6 +91,7 @@ $themes: (
   width: 36px;
   height: 36px;
   background-size: cover;
+  background-image: url('./logo-white-transparent@2x.png');
   @include theme-property(background-image, 'logo')
 }
 
@@ -108,7 +109,7 @@ $themes: (
 }
 
 .Background {
-  position: absolute;
+  position: fixed;
   top: -200px;
   right: -200px;
   bottom: -200px;
@@ -245,8 +246,10 @@ $themes: (
   &-logo {
     display: none;
     margin: 0 auto;
+
     @media #{$viewportMedium} {
       display: block;
+      margin-bottom: 25px;
     }
   }
 
@@ -267,7 +270,7 @@ $themes: (
 
   @media #{$viewportMedium} {
     justify-content: flex-start;
-    margin-top: 50px;
+    margin-top: 25px;
   }
 
   &-content {
