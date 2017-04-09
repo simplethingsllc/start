@@ -27,8 +27,8 @@ const withTheme = (className, theme = 'default', animating) => {
   return cx(`${className} ${className}-theme--${theme}`, animating && `${className}-anim--transition`);
 }
 
-const Button = ({ title, theme, className, ...props }) => (
-  <button className={cx(withTheme('Button', theme), className)} {...props}>{title}</button>
+const Button = ({ title, theme, className, disabled, ...props }) => (
+  <button className={cx(withTheme('Button', theme), className, disabled && 'Button--disabled')} {...props}>{title}</button>
 );
 
 const TextInput = ({ type = 'text', className, ...props }) => (
@@ -202,6 +202,11 @@ class TeaserPage extends Component {
       name: true,
       captcha: false,
     },
+    fields: {
+      name: '',
+      company: '',
+      email: '',
+    },
     selectedTheme: DEFAULT_THEME_INDEX,
     verification: undefined,
     submitted: false,
@@ -227,14 +232,33 @@ class TeaserPage extends Component {
   };
 
   _handleJoinClicked = () => {
-    rpc('/api/join', {
-      email: 'johndoe@example.com',
-    });
+    const { email, name, company } = this.state.fields;
+    rpc('/api/join', { email, name, company });
     this.setState({ submitted: true });
   };
 
+  _handleFieldChanged = (e, field) => {
+    const fields = {
+      ...this.state.fields,
+      [field]: e.target.value,
+    };
+    this.setState({ fields });
+  };
+
+  _canSubmit() {
+    const { fields, options } = this.state;
+    const parts = fields.email.trim().split('@');
+    if (parts.length !== 2 || parts[1].indexOf('.') < 1) {
+      return false;
+    }
+    if (options.name && fields.name.trim().length === 0) {
+      return false;
+    }
+    return true;
+  }
+
   _renderFormContent(theme) {
-    const { options } = this.state;
+    const { options, name, company, email } = this.state;
     return (
       <div className="TeaserPage-form">
         { options.logo ? (
@@ -245,15 +269,21 @@ class TeaserPage extends Component {
           <TextInput
             className="TeaserPage-input"
             placeholder="Name"
+            value={name}
+            onChange={(e) => this._handleFieldChanged(e, 'name')}
           />) : null }
         <TextInput
           className="TeaserPage-input"
           placeholder="Email"
+          value={email}
+          onChange={(e) => this._handleFieldChanged(e, 'email')}
         />
         { options.company ? (
           <TextInput
             className="TeaserPage-input"
             placeholder="Company (optional)"
+            value={company}
+            onChange={(e) => this._handleFieldChanged(e, 'company')}
           />) : null }
         { options.captcha ? (
           <Recaptcha
@@ -263,6 +293,7 @@ class TeaserPage extends Component {
         <Button
           className="TeaserPage-button"
           title="Join Waitlist"
+          disabled={!this._canSubmit()}
           theme={theme}
           onClick={this._handleJoinClicked}
         />

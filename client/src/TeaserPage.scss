@@ -1,3 +1,32 @@
+@mixin transition($transitions...) {
+  $unfoldedTransitions: ();
+  @each $transition in $transitions {
+    $unfoldedTransitions: append($unfoldedTransitions, unfoldTransition($transition), comma);
+  }
+  -webkit-transition: $unfoldedTransitions;
+  transition: $unfoldedTransitions;
+}
+
+@function unfoldTransition($transition) {
+  $property: all;
+  $duration: 500ms;
+  $easing: ease-in-out;
+  $delay: null;
+  $defaultProperties: ($property, $duration, $easing, $delay);
+
+  $unfoldedTransition: ();
+  @for $i from 1 through length($defaultProperties) {
+    $p: null;
+    @if $i <= length($transition) {
+      $p: nth($transition, $i)
+    } @else {
+      $p: nth($defaultProperties, $i)
+    }
+    $unfoldedTransition: append($unfoldedTransition, $p);
+  }
+
+  @return $unfoldedTransition;
+}
 
 $viewportRetina: "only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)";
 $viewportMedium: "only screen and (max-width: 800px)";
@@ -5,31 +34,28 @@ $viewportSmall: "only screen and (max-width: 480px)";
 
 $themes: (
   blue: (
-    backgroundColor: #2d20e2,
+    color: #2d20e2,
+    logo: url('./logo-blue@2x.png'),
+    check: url('./icon-check-blue@2x.png'),
   ),
   black: (
-    backgroundColor: #000,
+    color: #000,
+    logo: url('./logo-black@2x.png'),
+    check: url('./icon-check-black@2x.png'),
   ),
   red: (
-    backgroundColor: rgb(217, 14, 62),
+    color: rgb(217, 14, 62),
+    logo: url('./logo-red@2x.png'),
+    check: url('./icon-check-red@2x.png'),
   ),
 );
 
-@mixin theme-transitions {
-  transition-delay: 0s;
-  transition-duration: 500ms;
-  transition-property: background;
-  transition-property: color;
-  transition-timing-function: ease-in-out;
-}
-
-@mixin theme-colors {
+@mixin theme-property($property, $key) {
   @each $name, $theme in $themes {
     &-theme--#{$name} {
-      background-color: map-get($theme, 'backgroundColor');
+      #{$property}: map-get($theme, $key);
     }
   }
-  @include theme-transitions;
 }
 
 .Button {
@@ -42,7 +68,15 @@ $themes: (
   text-transform: uppercase;
   color: #FFF;
   height: 48px;
-  @include theme-colors;
+
+  @include theme-property(background-color, 'color')
+  @include transition(background-color, opacity)
+
+  &--disabled {
+    opacity: 0.4;
+    cursor: default;
+    @include transition(background-color, opacity)
+  }
 }
 
 .TextInput {
@@ -57,26 +91,14 @@ $themes: (
   width: 36px;
   height: 36px;
   background-size: cover;
-  background-image: url('./logo-white-transparent@2x.png');
-
-  @each $name, $theme in $themes {
-    &-theme--#{$name} {
-      background-image: url('./logo-#{$name}@2x.png');
-    }
-  }
+  @include theme-property(background-image, 'logo')
 }
 
 .Checkmark {
   width: 52px;
   height: 52px;
   background-size: cover;
-  background-image: url('./icon-check@2x.png');
-
-  @each $name, $theme in $themes {
-    &-theme--#{$name} {
-      background-image: url('./icon-check-#{$name}@2x.png');
-    }
-  }
+  @include theme-property(background-image, 'check')
 }
 
 .Layer {
@@ -92,7 +114,8 @@ $themes: (
   bottom: -200px;
   left: 41%;
   transform: rotate(9deg);
-  @include theme-colors;
+  @include theme-property(background-color, 'color')
+  @include transition(background-color)
 
   @media #{$viewportMedium} {
     top: -200px;
@@ -143,7 +166,7 @@ $themes: (
     outline: 0;
     position: relative;
 
-    @include theme-colors;
+    @include theme-property(background-color, 'color')
 
     &--selected::before {
       content: " ";
@@ -251,6 +274,7 @@ $themes: (
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     z-index: 1;
 
     @media #{$viewportMedium} {
@@ -293,12 +317,7 @@ $themes: (
     justify-content: center;
     padding: 32px;
 
-    @include theme-transitions
-    @each $name, $theme in $themes {
-      &-theme--#{$name} {
-        color: map-get($theme, 'backgroundColor');
-      }
-    }
+    @include theme-property(color, 'color')
   }
 
   &-checkmark {

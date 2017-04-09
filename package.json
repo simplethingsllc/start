@@ -6,13 +6,17 @@
     "babel-cli": "6.14.0",
     "babel-core": "6.14.0",
     "body-parser": "^1.17.1",
-    "express": "4.13.3"
+    "express": "4.13.3",
+    "mailchimp-api-v3": "^1.7.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "clean": "rm -rf build && mkdir build",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",
+    "build-client": "cd client && npm i && npm run build",
+    "build": "npm run clean && npm run build-client",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
+    "start": "npm run build-client && NODE_ENV=production node ./server.js",
     "lint": "eslint ."
   },
   "devDependencies": {
