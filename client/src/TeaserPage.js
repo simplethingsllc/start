@@ -35,6 +35,48 @@ const TextInput = ({ type = 'text', className, ...props }) => (
   <input type={type} className={cx('TextInput', className)} {...props} />
 );
 
+class LabeledTextInput extends Component {
+
+  static propTypes = {
+    className: PropTypes.any,
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string,
+  };
+
+  state = {
+    active: false,
+    value: '',
+  };
+
+  _onFocus = () => {
+    this.setState({ active: true });
+  };
+
+  _onBlur = () => {
+    this.setState({ active: false });
+  };
+
+  render() {
+    const { label, className, value, ...props } = this.props;
+    const active = this.state.active || (value && value.length > 0)
+    console.log('value', value);
+    return (
+      <div className="LabeledTextInput">
+        <div className={cx('LabeledTextInput-label', active && 'LabeledTextInput-label--active')}>
+          {label}
+        </div>
+        <TextInput
+            className={cx('LabeledTextInput-input', className)}
+            onFocus={this._onFocus}
+            onBlur={this._onBlur}
+            value={value}
+            {...props}
+        />
+      </div>
+    )
+  }
+}
+
 const Layer = ({ children, className }) => <div className={cx('Layer', className)}>{children}</div>;
 
 const Checkbox = ({ selected, onChange }) => (
@@ -261,7 +303,8 @@ class TeaserPage extends Component {
   }
 
   _renderFormContent(theme) {
-    const { options, name, company, email } = this.state;
+    const { options, fields } = this.state;
+    const { name, company, email } = fields;
     return (
       <div className="TeaserPage-form">
         { options.logo ? (
@@ -269,22 +312,22 @@ class TeaserPage extends Component {
             <Logo theme={theme} />
           </div>) : null }
         { options.name ? (
-          <TextInput
+          <LabeledTextInput
             className="TeaserPage-input"
-            placeholder="Name"
+            label="Name"
             value={name}
             onChange={(e) => this._handleFieldChanged(e, 'name')}
           />) : null }
-        <TextInput
+        <LabeledTextInput
           className="TeaserPage-input"
-          placeholder="Email"
+          label="Email"
           value={email}
           onChange={(e) => this._handleFieldChanged(e, 'email')}
         />
         { options.company ? (
-          <TextInput
+          <LabeledTextInput
             className="TeaserPage-input"
-            placeholder="Company (optional)"
+            label="Company (optional)"
             value={company}
             onChange={(e) => this._handleFieldChanged(e, 'company')}
           />) : null }
