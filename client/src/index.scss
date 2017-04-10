@@ -1,3 +1,5 @@
+@import 'const.scss';
+
 html, body {
   margin: 0;
   padding: 0;
@@ -5,8 +7,12 @@ html, body {
   vertical-align: baseline;
   box-sizing: border-box;
   font-family: sans-serif;
-  height: 100%;
   background-color: #f8f8f8;
+  height: 100%;
+
+  @media #{$viewportMedium} {
+    height: inherit;
+  }
 }
 
 *, *::before, *::after {

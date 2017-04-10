@@ -12,10 +12,10 @@
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "server": "babel-node server.js",
-    "client": "babel-node start-client.js",
     "build-client": "cd client && npm i && npm run build",
     "build": "npm run clean && npm run build-client",
     "start": "NODE_ENV=production node ./server.js",
+    "dev": "babel-node start-client.js",
     "lint": "eslint ."
   },
   "devDependencies": {

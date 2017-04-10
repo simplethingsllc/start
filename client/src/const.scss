@@ -1,0 +1,59 @@
+@mixin transition($transitions...) {
+  $unfoldedTransitions: ();
+  @each $transition in $transitions {
+    $unfoldedTransitions: append($unfoldedTransitions, unfoldTransition($transition), comma);
+  }
+  -webkit-transition: $unfoldedTransitions;
+  transition: $unfoldedTransitions;
+}
+
+@function unfoldTransition($transition) {
+  $property: all;
+  $duration: 500ms;
+  $easing: ease-in-out;
+  $delay: null;
+  $defaultProperties: ($property, $duration, $easing, $delay);
+
+  $unfoldedTransition: ();
+  @for $i from 1 through length($defaultProperties) {
+    $p: null;
+    @if $i <= length($transition) {
+      $p: nth($transition, $i)
+    } @else {
+      $p: nth($defaultProperties, $i)
+    }
+    $unfoldedTransition: append($unfoldedTransition, $p);
+  }
+
+  @return $unfoldedTransition;
+}
+
+$viewportRetina: "only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)";
+$viewportMedium: "only screen and (max-width: 800px)";
+$viewportSmall: "only screen and (max-width: 480px)";
+
+$themes: (
+  blue: (
+    color: #2d20e2,
+    logo: url('./logo-blue@2x.png'),
+    check: url('./icon-check-blue@2x.png'),
+  ),
+  black: (
+    color: #000,
+    logo: url('./logo-black@2x.png'),
+    check: url('./icon-check-black@2x.png'),
+  ),
+  red: (
+    color: rgb(217, 14, 62),
+    logo: url('./logo-red@2x.png'),
+    check: url('./icon-check-red@2x.png'),
+  ),
+);
+
+@mixin theme-property($property, $key) {
+  @each $name, $theme in $themes {
+    &-theme--#{$name} {
+      #{$property}: map-get($theme, $key);
+    }
+  }
+}
