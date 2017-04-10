@@ -1,0 +1,55 @@
+@mixin font-face($name, $file, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $name;
+    src: url($file + '.woff') format('woff');
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+
+$sans-serif-fallbacks: Helvetica, sans-serif;
+
+$font-families: (
+  Camber-Rg: (file: Camber-Rr, fallbacks: $sans-serif-fallbacks),
+  Camber-Md: (weight: 500, file: Camber-Mr, fallbacks: $sans-serif-fallbacks),
+);
+
+@mixin set-style($family) {
+  $props: map-get($font-families, $family);
+  @if map-has-key($props, weight) {
+    font-weight: map-get($props, weight);
+  } @else {
+    font-weight: normal;
+  }
+
+  @if map-has-key($props, style) {
+    font-style: map-get($props, style);
+  } @else {
+    font-style: normal;
+  }
+}
+
+@mixin set-family($family) {
+  $props: map-get($font-families, $family);
+  font-family: $family, map-get($props, fallbacks);
+  @include set-style($family)
+}
+
+@mixin load-font-family($family) {
+  $props: map-get($font-families, $family);
+  $file: "assets/#{map-get($props, file)}";
+
+  @font-face {
+    font-family: $family;
+    src: url($file + '.woff') format('woff');
+    @include set-style($family);
+  }
+}
+
+@mixin font-Camber-Rg() {
+  @include set-family(Camber-Rg)
+}
+
+@mixin font-Camber-Md() {
+  @include set-family(Camber-Md);
+}

@@ -61,10 +61,9 @@
   @include transition(background-color)
 
   @media #{$viewportMedium} {
-    top: -200px;
-    right: -200px;
     left: -200px;
-    bottom: 41%;
+    bottom: inherit;
+    height: 100vh;
   }
 }
 
@@ -248,6 +247,12 @@
     padding: 32px;
     display: flex;
     flex-direction: column;
+
+    input {
+      &::placeholder {
+        color: #aaa;
+      }
+    }
 
     @media #{$viewportSmall} {
       padding: 32px;

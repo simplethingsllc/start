@@ -179,7 +179,10 @@ const TitleSection = ({ onCustomize }) => (
       Signup flows made easy–no coding required.
     </h1>
     <p>
-      Add-on signup flows that you can create and customize in minutes.
+      Create, customize, and fine-tune your user signup flow in minutes.
+    </p>
+    <p>
+      Instantly add support for Facebook login, reCAPTCHA, Two-factor authentication and more.
     </p>
     <a
       href="#"
