@@ -11,7 +11,7 @@
 
 @function unfoldTransition($transition) {
   $property: all;
-  $duration: 500ms;
+  $duration: 300ms;
   $easing: ease-in-out;
   $delay: null;
   $defaultProperties: ($property, $duration, $easing, $delay);

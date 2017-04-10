@@ -5,14 +5,14 @@ import ReactDOM from 'react-dom';
 import { rpc } from './net';
 import './TeaserPage.css';
 
-const THEME_NAMES = [ 'blue', 'red', 'black' ];
+const THEME_NAMES = ['blue', 'red', 'black'];
 const DEFAULT_THEME_INDEX = 0;
 
 const createEmitter = () => {
   const listeners = {};
   return {
     emit(...args) {
-      Object.keys(listeners).map((k) => listeners[k](...args));
+      Object.keys(listeners).map(k => listeners[k](...args));
     },
     addListener(fn) {
       listeners[fn] = fn;
@@ -20,12 +20,12 @@ const createEmitter = () => {
     removeListener(fn) {
       delete listeners[fn];
     },
-  }
+  };
 };
 
 const withTheme = (className, theme = 'default', animating) => {
   return cx(`${className} ${className}-theme--${theme}`, animating && `${className}-anim--transition`);
-}
+};
 
 const Button = ({ title, theme, className, disabled, ...props }) => (
   <button className={cx(withTheme('Button', theme), className, disabled && 'Button--disabled')} {...props}>{title}</button>
@@ -58,7 +58,7 @@ class LabeledTextInput extends Component {
 
   render() {
     const { label, className, value, ...props } = this.props;
-    const active = this.state.active || (value && value.length > 0)
+    const active = this.state.active || (value && value.length > 0);
     console.log('value', value);
     return (
       <div className="LabeledTextInput">
@@ -66,14 +66,14 @@ class LabeledTextInput extends Component {
           {label}
         </div>
         <TextInput
-            className={cx('LabeledTextInput-input', className)}
-            onFocus={this._onFocus}
-            onBlur={this._onBlur}
-            value={value}
-            {...props}
+          className={cx('LabeledTextInput-input', className)}
+          onFocus={this._onFocus}
+          onBlur={this._onBlur}
+          value={value}
+          {...props}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -109,7 +109,7 @@ if (!recaptchaApi) {
   window.onRecaptchaLoaded = () => {
     recaptchaApi = window.grecaptcha;
     recaptchaEmitter.emit(recaptchaApi);
-  }
+  };
 }
 
 class Recaptcha extends Component {
@@ -153,7 +153,7 @@ class Recaptcha extends Component {
   render() {
     setTimeout(this._renderWidget);
     const { className } = this.props;
-    return <div ref="container" className={cx(className, 'g-recaptcha')} ></div>
+    return <div ref="container" className={cx(className, 'g-recaptcha')} />;
   }
 }
 
@@ -164,8 +164,7 @@ const ColorPicker = ({ theme, onSelect }) => (
         <div
           key={t}
           className={cx(withTheme('ColorPicker-button', t), t === theme && 'ColorPicker-button--selected')}
-          onClick={() => onSelect(i)}>
-        </div>
+          onClick={() => onSelect(i)} />
       ))
     }
   </div>
@@ -179,7 +178,7 @@ const CustomizeSection = ({ options, theme, onChangeTheme, onChangeOption }) => 
       <div className="Option">
         <Checkbox
           selected={options.logo}
-          onChange={(selected) => onChangeOption('logo', selected)}
+          onChange={selected => onChangeOption('logo', selected)}
         />Logo
       </div>
       <div className="Option">Color:
@@ -195,19 +194,19 @@ const CustomizeSection = ({ options, theme, onChangeTheme, onChangeOption }) => 
       <div className="Option">
         <Checkbox
           selected={options.company}
-          onChange={(selected) => onChangeOption('company', selected)}
+          onChange={selected => onChangeOption('company', selected)}
         />Company
       </div>
       <div className="Option">
         <Checkbox
           selected={options.name}
-          onChange={(selected) => onChangeOption('name', selected)}
+          onChange={selected => onChangeOption('name', selected)}
         />Name
       </div>
       <div className="Option">
         <Checkbox
           selected={options.captcha}
-          onChange={(selected) => onChangeOption('captcha', selected)}
+          onChange={selected => onChangeOption('captcha', selected)}
         />CAPTCHA
       </div>
     </div>
@@ -316,20 +315,20 @@ class TeaserPage extends Component {
             className="TeaserPage-input"
             label="Name"
             value={name}
-            onChange={(e) => this._handleFieldChanged(e, 'name')}
+            onChange={e => this._handleFieldChanged(e, 'name')}
           />) : null }
         <LabeledTextInput
           className="TeaserPage-input"
           label="Email"
           value={email}
-          onChange={(e) => this._handleFieldChanged(e, 'email')}
+          onChange={e => this._handleFieldChanged(e, 'email')}
         />
         { options.company ? (
           <LabeledTextInput
             className="TeaserPage-input"
             label="Company (optional)"
             value={company}
-            onChange={(e) => this._handleFieldChanged(e, 'company')}
+            onChange={e => this._handleFieldChanged(e, 'company')}
           />) : null }
         { options.captcha ? (
           <Recaptcha
@@ -370,10 +369,10 @@ class TeaserPage extends Component {
             {
               customizing
                 ? <CustomizeSection
-                    options={this.state.options}
-                    onChangeOption={(option, selected) => this._handleChangeOption(option, selected)}
-                    onChangeTheme={(selectedTheme) => this.setState({ selectedTheme })}
-                    theme={theme}
+                  options={this.state.options}
+                  onChangeOption={(option, selected) => this._handleChangeOption(option, selected)}
+                  onChangeTheme={selectedTheme => this.setState({ selectedTheme })}
+                  theme={theme}
                   />
                 : <TitleSection onCustomize={() => this.setState({ customizing: true })} />
             }
