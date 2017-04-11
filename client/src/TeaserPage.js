@@ -59,7 +59,6 @@ class LabeledTextInput extends Component {
   render() {
     const { label, className, value, ...props } = this.props;
     const active = this.state.active || (value && value.length > 0);
-    console.log('value', value);
     return (
       <div className="LabeledTextInput">
         <div className={cx('LabeledTextInput-label', active && 'LabeledTextInput-label--active')}>
