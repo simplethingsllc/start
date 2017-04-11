@@ -362,9 +362,12 @@ class TeaserPage extends Component {
       <div className="TeaserPage">
         <Background theme={theme} />
         <div className="TeaserPage-content">
-          <Layer className="TeaserPage-left">
-            { submitted ? this._renderThanks(theme) : this._renderFormContent(theme) }
-          </Layer>
+          <div className="TeaserPage-left">
+            <Layer>
+              { submitted ? this._renderThanks(theme) : this._renderFormContent(theme) }
+            </Layer>
+            <div className="TeaserPage-disclaimer">(Try customizing this form on desktop)</div>
+          </div>
           <div className="TeaserPage-right">
             {
               customizing

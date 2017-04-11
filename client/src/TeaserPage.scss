@@ -23,6 +23,8 @@
 
 .TextInput {
   font-size: 13px;
+  min-height: 32px;
+  line-height: 13px;
   border: 0;
   border-bottom: 1px solid #eee;
   outline: 0;
@@ -31,8 +33,7 @@
 
 .LabeledTextInput {
   position: relative;
-  margin-left: 32px;
-  margin-right: 32px;
+  margin: 0 32px;
 
   &-label {
     font-size: 13px;
@@ -52,8 +53,8 @@
     line-height: 14px;
   }
 
-  &-input {
-
+  @media #{$viewportMedium} {
+    margin: 0 16px;
   }
 }
 
@@ -74,7 +75,7 @@
 
 .Layer {
   background-color: white;
-  display: inline-flex;
+  display: flex;
   box-shadow: 0px 0px 30px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -196,9 +197,10 @@
     letter-spacing: -0.4px;
 
     @media #{$viewportSmall} {
-      font-size: 21px;
-      line-height: 32px;
+      font-size: 24px;
+      line-height: 34px;
       letter-spacing: -0.2px;
+      margin: 36px 0;
     }
   }
 
@@ -214,7 +216,7 @@
 
   &-logo {
     display: none;
-    margin: 20 auto;
+    margin: 20px auto;
 
     @media #{$viewportMedium} {
       display: block;
@@ -289,7 +291,7 @@
       }
     }
 
-    @media #{$viewportSmall} {
+    @media #{$viewportMedium} {
       padding: 32px;
     }
   }
@@ -323,6 +325,17 @@
     margin-top: 29px;
   }
 
+  &-disclaimer {
+    color: #aaa;
+    margin-top: 24px;
+    text-align: center;
+    display: none;
+
+    @media #{$viewportMedium} {
+      display: block;
+    }
+  }
+
   &-captcha {
     margin: 0 auto;
     margin-top: 32px;
@@ -331,5 +344,9 @@
 
   &-button {
     margin-top: 72px;
+
+    @media #{$viewportMedium} {
+      margin-top: 52px;
+    }
   }
 }
